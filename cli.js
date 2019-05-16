@@ -1,4 +1,9 @@
 #!/usr/bin/env node
 
-const [, , ...args] = process.argv;
-console.log('hello npm-auto-update: ', args);
+const autoUpdate = require('./index');
+
+autoUpdate()
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    });

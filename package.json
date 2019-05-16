@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/prowe/npm-auto-update/issues"
   },
-  "homepage": "https://github.com/prowe/npm-auto-update#readme"
+  "homepage": "https://github.com/prowe/npm-auto-update#readme",
+  "dependencies": {
+    "simple-git": "^1.113.0"
+  }
 }
