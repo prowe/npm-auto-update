@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/prowe/npm-auto-update#readme",
   "dependencies": {
+    "@octokit/rest": "^16.26.0",
     "npm-check-updates": "^3.1.9",
     "simple-git": "^1.113.0"
   }
