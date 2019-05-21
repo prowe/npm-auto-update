@@ -15,8 +15,10 @@ async function initBranch() {
     await git.checkout('master');
     const existingBranches = await git.branchLocal();
     if (existingBranches.all.includes(branchName)) {
-        console.log('Branch exists. Deleting first');
-        await git.raw(['branch', '-D', branchName]);
+        console.log('Branch exists. Updating it.');
+        // await git.raw(['branch', '-D', branchName]);
+        await git.checkout(branchName);
+        await git.merge(['master']);
     }
 
     await git.checkoutBranch(branchName, 'master');
