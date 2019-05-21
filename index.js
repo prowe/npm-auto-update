@@ -22,12 +22,22 @@ async function updatePackages() {
         upgrade: true
     });
     console.log('results', updates);
+    return updates;
+}
+
+function hasUpdates(updates) {
+    return Object.keys(updates).length;
 }
 
 module.exports = async function npmAutoUpdate(options) {
     console.log('Starting NPM auto update');
     await initBranch();
-    await updatePackages();
+    const updates = await updatePackages();
+    if (!hasUpdates(updates)) {
+        console.log('nothing to update');
+        return;
+    }
 
+    npmInstall();
     console.log('NPM auto update complete!');
 }
