@@ -13,21 +13,17 @@ async function initBranch() {
     console.log(`Checking out branch: ${branchName}`);
 
     await git.checkout('master');
-    const existingBranches = await git.branchLocal();
-    if (!existingBranches.all.includes(branchName)) {
+    const existingBranches = await git.branch(['--all']);
+    if (existingBranches.all.find(name => name.split('/').includes(branchName))) {
+        console.log('Branch exists');
+        await git.checkout(branchName);
+        await git.pull();
+    } else {
         console.log('Branch does not exist. Creating it.');
-        await git.branch([
-            // '--set-upstream-to',
-            // branchName,
-            branchName
-        ]);
-
-        console.log('branch created');
-        // await git.raw(['branch', '-D', branchName]);
+        await git.checkoutBranch(branchName, 'master');
+        await git.branch(['--set-upstream-to', 'origin', branchName]);
+        console.log('Branch created');
     }
-    await git.checkout(branchName);
-
-    // await git.checkoutBranch(branchName, 'master');
 }
 
 async function commitChangesToBranch() {
@@ -124,13 +120,15 @@ module.exports = async function npmAutoUpdate(options) {
     console.log('Starting NPM auto update');
     await initBranch();
     const updates = await updatePackages();
-    if (!hasUpdates(updates)) {
-        console.log('nothing to update');
-        return;
+    if (hasUpdates(updates)) {
+        console.log('Applying Updates');
+        await npmInstall();
     }
 
-    await npmInstall();
     await commitChangesToBranch();
-    await createPullRequestIfNeeded();
+
+    if (hasUpdates(updates)) {
+        await createPullRequestIfNeeded(updates);
+    }
     console.log('NPM auto update complete!');
 }
