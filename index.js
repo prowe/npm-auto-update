@@ -14,14 +14,20 @@ async function initBranch() {
 
     await git.checkout('master');
     const existingBranches = await git.branchLocal();
-    if (existingBranches.all.includes(branchName)) {
-        console.log('Branch exists. Updating it.');
-        // await git.raw(['branch', '-D', branchName]);
-        await git.checkout(branchName);
-        await git.merge(['master']);
-    }
+    if (!existingBranches.all.includes(branchName)) {
+        console.log('Branch does not exist. Creating it.');
+        await git.branch([
+            // '--set-upstream-to',
+            // branchName,
+            branchName
+        ]);
 
-    await git.checkoutBranch(branchName, 'master');
+        console.log('branch created');
+        // await git.raw(['branch', '-D', branchName]);
+    }
+    await git.checkout(branchName);
+
+    // await git.checkoutBranch(branchName, 'master');
 }
 
 async function commitChangesToBranch() {
@@ -45,7 +51,7 @@ async function updatePackages() {
 }
 
 function hasUpdates(updates) {
-    return Object.keys(updates).length;
+    return updates && Object.keys(updates).length;
 }
 
 function npmInstall() {
