@@ -21,6 +21,6 @@
   "homepage": "https://github.com/prowe/npm-auto-update#readme",
   "dependencies": {
     "npm-check-updates": "^3.1.9",
-    "simple-git": "^1.0.0"
+    "simple-git": "^1.113.0"
   }
 }
